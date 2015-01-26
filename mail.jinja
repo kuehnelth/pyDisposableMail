@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Spam Mail</title>
+        <style type="text/css">
+         body {
+             overflow-y: scroll;
+         }
+
+         table {
+             width: 100%;
+         }
+
+         th, td {
+             text-align: left;
+         }
+
+         tr.msghead:nth-child(odd) {
+             background-color: #EEEEEE;
+         }
+
+         .mailcontent {
+             display: none;
+         }
+
+         iframe {
+             width: 100%;
+             height: 400px;
+             border: 1px solid #666;
+         }
+        </style>
+        <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    </head>
+    <body>
+        Random mail address: <input id="mail" />
+        <script type="text/javascript">
+         $("#mail").val(Math.random().toString(36).substring(2) + "@s.9001.ovh");
+        </script>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Subject</th>
+                <th>Plaintext</th>
+                <th>HTML</th>
+            </tr>
+            {% for i, n in mails %}
+            <tr class="msghead">
+                <td>{{n["date"]}}</td>
+                <td>{{n["from"]}}</td>
+                <td>{{n["to"]}}</td>
+                <td>{{n["subject"]}}</td>
+                <td><a onclick='$("#plaintext-{{i}}").toggle();'>{% if n["plaintext"] != "" %}[toggle]{% endif %}</a></td>
+                <td><a onclick='$("#html-{{i}}").toggle();'>{% if n["html"] != "" %}[toggle]{% endif %}</a></td>
+
+            </tr>
+            <tr id="plaintext-{{i}}" class="mailcontent">
+                <td colspan="6">
+                    <iframe src='data:text/plain;base64{% if n["html-cs"] %};charset={{n["plaintext-cs"]}}{% endif %}, {{n["plaintext"]}}'></iframe>
+                </td>
+            </tr>
+            <tr id="html-{{i}}" class="mailcontent">
+                <td colspan="6">
+                    <iframe src='data:text/html;base64{% if n["html-cs"] %};charset={{n["html-cs"]}}{% endif %}, {{n["html"]}}'></iframe>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
