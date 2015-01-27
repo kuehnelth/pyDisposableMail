@@ -34,7 +34,7 @@ class CustomSMTPServer(smtpd.SMTPServer):
     def getheader(self, header_text, default="ascii"):
         """Decode the specified header"""
         headers = decode_header(header_text)
-        header_sections = [unicode(text, charset)
+        header_sections = [unicode(text, charset or "ascii")
                            for text, charset in headers]
         return u"".join(header_sections)
 
